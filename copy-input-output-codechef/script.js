@@ -13,22 +13,30 @@
 (function() {
     'use strict';
     var clipboard = new ClipboardJS(".copier");
+    var  list = ['', '0', '1', '2', '3'];
 
-    let input = $('#exampleinput').next().children();
-    let output = $('#exampleoutput').next().children();
-    input.attr('id', 'inputtext1');
-    output.attr('id', 'outputtext1');
-    console.log(input[0], output[0]);
+    document.body.innerHTML += '<p style = "position:fixed; bottom:0px; right: 10px; background-color:black; color:white; padding:5px; display: none;" id = "toggletext"> Your Text was copied </p>'
 
+    var checkRenderedExists = setInterval(() => {
+        let rendered = false;
+        for(let i of list){
+            let input = $('#exampleinput' + i).next().children();
+            let output = $('#exampleoutput' + i).next().children();
+            if(!input[0])continue;
 
-    $('<button class = "button copier" data-clipboard-target="#inputtext1">Copy</button> <br />').insertBefore('#inputtext1');
-    $('<button class = "button copier" data-clipboard-target="#outputtext1">Copy</button> <br />').insertBefore('#outputtext1');
+            rendered = true;
+            input.attr('id', 'inputtext' + i);
+            output.attr('id', 'outputtext' + i);
+            $('<button class = "button copier" data-clipboard-target="#inputtext' + i + '">Copy</button> <br />').insertBefore('#inputtext' + i);
+            $('<button class = "button copier" data-clipboard-target="#outputtext' + i + '">Copy</button> <br />').insertBefore('#outputtext' + i);
+        }
+        if(rendered)clearInterval(checkRenderedExists);
+    }, 100);
 
-    document.body.innerHTML += '<p style = "position:fixed; bottom:0px; right: 10px; background-color:grey; padding:5px; display: none;" id = "toggletext"> Your Text was copied </p>'
     clipboard.on('success', function(e){
         $('#toggletext').css('display', '');
         e.clearSelection();
         setTimeout(() => $('#toggletext').css('display', 'none'),
-                   3000);
+                   1000);
     });
 })();
